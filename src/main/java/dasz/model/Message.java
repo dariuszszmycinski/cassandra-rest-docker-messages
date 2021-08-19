@@ -5,7 +5,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-@Getter @Setter
+import javax.validation.constraints.Email;
+
+@Getter
+@Setter
 @Table
 
 public class Message {
@@ -14,7 +17,7 @@ public class Message {
     @PrimaryKey
     @Id
     private int id;
-    private @NonNull String email;
+    private @NonNull @Email String email;
     private @NonNull String title;
     private @NonNull String content;
     private @NonNull int magic_number;
