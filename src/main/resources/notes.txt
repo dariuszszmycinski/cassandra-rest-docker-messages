@@ -1,11 +1,9 @@
 POST http://localhost:8080/message
-Cache-Control: no-cache
 Content-Type: application/json
 
 {
-  "id": 66,
-  "email": "b@b.b",
-  "title": "interview",
-  "content": "Welcome",
-  "magic_number": "66"
+  "email": "la",
+  "title": "la",
+  "content": "la",
+  "magic_number": 99
 }

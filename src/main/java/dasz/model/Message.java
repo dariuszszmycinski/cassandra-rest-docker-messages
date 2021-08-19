@@ -1,21 +1,29 @@
 package dasz.model;
 
+import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.Setter;
-
-@AllArgsConstructor
 @Getter @Setter
 @Table
+
 public class Message {
+    private static int count = 0;
+
     @PrimaryKey
-    private @NonNull String id;
+    @Id
+    private int id;
     private @NonNull String email;
     private @NonNull String title;
     private @NonNull String content;
-    private @NonNull String magic_number;
+    private @NonNull int magic_number;
+
+    public Message(@NonNull String email, @NonNull String title, @NonNull String content, @NonNull int magic_number) {
+        this.id = ++count;
+        this.email = email;
+        this.title = title;
+        this.content = content;
+        this.magic_number = magic_number;
+    }
 }

@@ -7,34 +7,54 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-
 
 @RestController
+@RequestMapping("/api")
 public class MessageController {
 
     @Autowired
     MessageRepository messageRepository;
 
-    @GetMapping(value = "/healthcheck", produces = "application/json; charset=utf-8")
-    public String getHealthCheck()
-    {
-        return "{ \"isWorking\" : true }";
+    @PostMapping("/send")
+    public List<Message> sendMessages(){
+        List<Message> messageList = (List<Message>) messageRepository.findAll();
+        messageRepository.deleteAll();
+        return messageList;
+    }
+
+    @PostMapping("/send/{magic_number}")
+    public List<Message> sendMessages(@PathVariable int magic_number){
+        Iterable<Message> messageList = messageRepository.findAll();
+        List<Message> result = new ArrayList<>();
+        for (Message m:messageList) {
+            if (m.getMagic_number()==magic_number){
+                result.add(m);
+                messageRepository.delete(m);
+            }
+        }
+        return result;
     }
 
     @PostMapping("/message")
     public Message addMessage(@RequestBody Message newMessage) {
-        String id = String.valueOf(new Random().nextInt());
-        Message mess = new Message(id, newMessage.getEmail(), newMessage.getTitle(), newMessage.getContent(), newMessage.getMagic_number());
-        messageRepository.save(mess);
-        return mess;
+        messageRepository.save(newMessage,300); //message will be deleted after 5 minutes in database
+        return newMessage;
     }
 
     @GetMapping("/messages")
-    public List<Message> getMesseges() {
+    public List<Message> getMessages() {
+        return (List<Message>) messageRepository.findAll();
+    }
+
+    @GetMapping("/messages/{emailValue}")
+    public List<Message> getMessages(@PathVariable String emailValue) {
         Iterable<Message> result = messageRepository.findAll();
         List<Message> messageList = new ArrayList<>();
-        result.forEach(messageList::add);
+        for (Message m : result) {
+            if (m.getEmail().equals(emailValue)) {
+                messageList.add(m);
+            }
+        }
         return messageList;
     }
 
