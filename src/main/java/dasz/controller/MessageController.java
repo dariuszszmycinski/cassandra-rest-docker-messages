@@ -3,6 +3,7 @@ package dasz.controller;
 import dasz.model.Message;
 import dasz.model.Sender;
 import dasz.repository.MessageRepository;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,22 +19,27 @@ public class MessageController {
     @Autowired
     private Sender sender;
 
-    //send all messages in database
-    @PostMapping("/send")
-    public List<Message> sendMessages(){
-        List<Message> messageList = (List<Message>) messageRepository.findAll();
-        messageRepository.deleteAll();
-        for (Message m:messageList) sender.sendEmail(m);
-        return messageList;
+    @PostMapping(value = "/send")
+    @ResponseBody
+    public List<Message> sendMessages(@RequestBody MagicalRequest magicalRequest) {
+        return getMessages(magicalRequest.getMagic_number());
     }
 
-    //send all messages with specific magic number
+    @Data
+    private static class MagicalRequest {
+        private Integer magic_number;
+    }
+
     @PostMapping("/send/{magic_number}")
-    public List<Message> sendMessages(@PathVariable int magic_number){
+    public List<Message> sendMessagesWithUrlNumber(@PathVariable int magic_number) {
+        return getMessages(magic_number);
+    }
+
+    private List<Message> getMessages(int magic_number) {
         Iterable<Message> messageList = messageRepository.findAll();
         List<Message> result = new ArrayList<>();
-        for (Message m:messageList) {
-            if (m.getMagic_number()==magic_number){
+        for (Message m : messageList) {
+            if (m.getMagic_number() == magic_number) {
                 result.add(m);
                 messageRepository.delete(m);
                 sender.sendEmail(m);
@@ -43,9 +49,10 @@ public class MessageController {
     }
 
     //add message to database
-    @PostMapping("/message")
+    @PostMapping(value = "/message")
+    @ResponseBody
     public Message addMessage(@RequestBody Message newMessage) {
-        messageRepository.save(newMessage,300); //message will be deleted after 5 minutes in database
+        messageRepository.save(newMessage, 300); //message will be deleted after 5 minutes in database
         return newMessage;
     }
 
@@ -65,6 +72,5 @@ public class MessageController {
         }
         return messageList;
     }
-
 
 }

@@ -5,8 +5,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.mapping.PrimaryKey;
 import org.springframework.data.cassandra.core.mapping.Table;
 
-import javax.validation.constraints.Email;
-
 @Getter
 @Setter
 @Table
@@ -17,16 +15,27 @@ public class Message {
     @PrimaryKey
     @Id
     private int id;
-    private @NonNull @Email String email;
+    private @NonNull String email;
     private @NonNull String title;
     private @NonNull String content;
-    private @NonNull int magic_number;
+    private int magic_number;
 
-    public Message(@NonNull String email, @NonNull String title, @NonNull String content, @NonNull int magic_number) {
+    public Message(@NonNull String email, @NonNull String title, @NonNull String content, int magic_number) {
         this.id = ++count;
         this.email = email;
         this.title = title;
         this.content = content;
         this.magic_number = magic_number;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "id=" + id +
+                ", email='" + email + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", magic_number=" + magic_number +
+                '}';
     }
 }

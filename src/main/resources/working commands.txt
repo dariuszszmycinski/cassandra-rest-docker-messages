@@ -1,0 +1,40 @@
+POST http://localhost:8080/message
+Content-Type: application/json
+
+{
+  "email": "jan.kowalski@example.com",
+  "title": "Interview",
+  "content": "simple text",
+  "magic_number": 101
+}
+-------------------------------------------------------
+POST http://localhost:8080/message
+Content-Type: application/json
+
+{
+  "email": "jan.kowalski@example.com",
+  "title": "Interview 2",
+  "content": "simple text 2",
+  "magic_number": 22
+}
+-------------------------------------------------------
+POST http://localhost:8080/message
+Content-Type: application/json
+
+{
+  "email": "anna.zajkowska@example.com",
+  "title": "Interview 3",
+  "content": "simple text 3",
+  "magic_number": 101
+}
+-------------------------------------------------------
+POST http://localhost:8080/api/send
+Content-Type: application/json
+
+{
+"magic_number": 101
+}
+-------------------------------------------------------
+POST http://localhost:8080/api/send/101
+-------------------------------------------------------
+GET http://localhost:8080/api/messages/jan.kowalski@example.com
